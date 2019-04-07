@@ -8,6 +8,13 @@ class RecipesController < ApplicationController
     render json: @recipes
   end
 
+  def index_of_user
+    @user = current_user
+    @recipes = @user.recipes.all
+
+    render json: @recipes
+  end
+
   # GET /recipes/1
   def show
     render json: @recipe
@@ -22,6 +29,18 @@ class RecipesController < ApplicationController
     else
       render json: @recipe.errors, status: :unprocessable_entity
     end
+  end
+
+  def create_from_user
+    @user = current_user
+    @recipe = @user.recipes.new(recipe_params)
+
+    if @recipe.save
+      render json: @recipe, status: :created, location: @recipe
+    else
+      render json: @recipe.errors, status: :unprocessable_entity
+    end
+
   end
 
   # PATCH/PUT /recipes/1
