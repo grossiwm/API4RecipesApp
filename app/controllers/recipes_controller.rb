@@ -1,5 +1,6 @@
 class RecipesController < ApplicationController
   before_action :set_recipe, only: [:show, :update, :destroy]
+  before_action :authenticate_user!, only: [:create_from_user]
 
   # GET /recipes
   def index
