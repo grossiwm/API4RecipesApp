@@ -27,7 +27,7 @@ class RecipesController < ApplicationController
       render json: "No params received."
     else
       @recipes = Recipe.connection.select_all(
-        "select * from recipes where title like '#{search}%' or '#{search.capitalize}%'"
+        "select * from recipes where title like '#{search.capitalize}%'"
       ).to_hash
 
       render json: @recipes
