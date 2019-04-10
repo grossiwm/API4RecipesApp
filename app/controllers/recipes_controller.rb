@@ -1,15 +1,14 @@
 class RecipesController < ApplicationController
   before_action :set_recipe, only: [:show, :update, :destroy]
-  before_action :authenticate_user!, only: [:create_from_user, :index_of_user]
+  before_action :authenticate_user!, only: [:create_from_user, :index_from_user]
 
   # GET /recipes
   def index
     @recipes = Recipe.all
-
     render json: @recipes
   end
 
-  def index_of_user
+  def index_from_user
     @user = current_user
     @recipes = @user.recipes.all
 
@@ -19,6 +18,20 @@ class RecipesController < ApplicationController
   # GET /recipes/1
   def show
     render json: @recipe
+  end
+
+  def search_recipe
+    search = params[:search]
+    
+    if search.nil?
+      render json: "No params received."
+    else
+      @recipes = Recipe.connection.select_all(
+        "select * from recipes where title like '#{search}%'"
+      ).to_hash
+
+      render json: @recipes
+    end 
   end
 
   # POST /recipes
